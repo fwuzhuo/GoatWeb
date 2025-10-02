@@ -58,7 +58,3 @@ jobs:
     needs: snyk-security
     uses: ./.github/workflows/release.yml
 
-  welcome:
-    name: Welcome
-    needs: snyk-security
-    uses: ./.github/workflows/welcome.yml
