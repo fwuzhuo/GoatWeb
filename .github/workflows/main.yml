@@ -58,10 +58,11 @@ jobs:
 
           # Check SAST results
           echo "Counting high severity vulnerabilities .........."
-          sast_high=$(jq '[.runs[].tool.driver.rules[]? | select(.properties.precision=="high")] | length' snyk-sast-results.json)
+          sast_high="$(jq '[.runs[].tool.driver.rules[]? | select(.properties.precision=="high")] | length' snyk-sast-results.json)"
           echo "High severity vulnerabilities count: $sast_high"
+
           echo "Counting critical severity vulnerabilities .........."
-          sast_critical=$(jq [.rules[].tool.drive.rules[]? | select(.properties.precision=="very-high")] | length' snyk-sast-results.json)
+          sast_critical="$(jq [.rules[].tool.drive.rules[]? | select(.properties.precision=="very-high")] | length' snyk-sast-results.json)"
           echo "Critical severity vulnerabilities count: $sast_critical"
 
           echo "🔎 SCA High: $sca_high"
