@@ -37,7 +37,7 @@ jobs:
         run: |
           snyk code test --report --project-name="fwuzhuo/GoatWeb" --json-file-output=snyk-sast-results.json || true
           jq . snyk-sast-results.json > snyk-sast-results-pretty.json
-          snyk code monitor || true
+          snyk code monitor --all-projects || true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
