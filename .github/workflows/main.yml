@@ -32,20 +32,45 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
+      - name: Run Snyk SAST test
+        run: |
+          snyk code test --json-file-output-snyk-results.json || true
+          jq . snyk-sast-results.json > snyk-sast-results-pretty.json
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Upload SAST results to Snyk Dashboard
+        run: snyk code monitor
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
       - name: Upload Snyk Results Artifact
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: snyk-vulnerabilities
-          path: snyk-results-pretty.json
+          path: |
+            snyk-results-pretty.json
+            snyk-sast-results.json
 
       - name: Fail if high/critical found
         run: |
-          high=$(jq '[.vulnerabilities[] | select(.severity=="high")] | length' snyk-results.json)
-          critical=$(jq '[.vulnerabilities[] | select(.severity=="critical")] | length' snyk-results.json)
+          # Check SCA results
+          sca_high=$(jq '[.vulnerabilities[] | select(.severity=="high")] | length' snyk-results.json)
+          sca_critical=$(jq '[.vulnerabilities[] | select(.severity=="critical")] | length' snyk-results.json)
 
-          echo "🔎 High: $high"
-          echo "🔎 Critical: $critical"
+          # Check SAST results
+          sast_high=$(jq '[.issues[] | select(.severity=="high")] | lenght' snyk-sast-results.json)
+          sast_critical=$(jq [.issues[] | select(.severity=="critical")] | lenght' snyk-results.json)
+
+          echo "🔎 SCA High: $sca_high"
+          echo "🔎 SCA Critical: $sca_critical"
+
+          echo "🔎 SAST High: $sast_high"
+          echo "🔎 SAST Critical: $sast_critical"
+
+          total_high=$((sca_high+sast_high))
+          total_critical=$((sca_critical+sast_critical))
 
           if [ "$high" -gt 0 ] || [ "$critical" -gt 0 ]; then
             echo "❌ High/Critical vulnerabilities found. Failing."
