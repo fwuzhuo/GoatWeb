@@ -57,8 +57,8 @@ jobs:
           sca_critical=$(jq '[.vulnerabilities[] | select(.severity=="critical")] | length' snyk-results.json)
 
           # Check SAST results
-          sast_high=$(jq '[.issues[] | select(.severity=="high")] | lenght' snyk-sast-results.json)
-          sast_critical=$(jq [.issues[] | select(.severity=="critical")] | lenght' snyk-results.json)
+          sast_high=$(jq '[.issues[] | select(.severity=="high")] | length' snyk-sast-results.json)
+          sast_critical=$(jq [.issues[] | select(.severity=="critical")] | length' snyk-results.json)
 
           echo "🔎 SCA High: $sca_high"
           echo "🔎 SCA Critical: $sca_critical"
@@ -69,7 +69,7 @@ jobs:
           total_high=$((sca_high+sast_high))
           total_critical=$((sca_critical+sast_critical))
 
-          if [ "$high" -gt 0 ] || [ "$critical" -gt 0 ]; then
+          if [ "$total_high" -gt 0 ] || [ "$total_critical" -gt 0 ]; then
             echo "❌ High/Critical vulnerabilities found. Failing."
             exit 1
           fi
