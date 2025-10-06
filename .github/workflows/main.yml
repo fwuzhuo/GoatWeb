@@ -57,8 +57,8 @@ jobs:
           sca_critical=$(jq '[.vulnerabilities[] | select(.severity=="critical")] | length' snyk-results.json)
 
           # Check SAST results
-          sast_high=$(jq '[.issues[] | select(.severity=="high")] | length' snyk-sast-results.json)
-          sast_critical=$(jq [.issues[] | select(.severity=="critical")] | length' snyk-sast-results.json)
+          sast_high=$(jq '[.rules[] | select(.precision=="high")] | length' snyk-sast-results.json)
+          sast_critical=$(jq [.rules[] | select(.precision=="very-high")] | length' snyk-sast-results.json)
 
           echo "🔎 SCA High: $sca_high"
           echo "🔎 SCA Critical: $sca_critical"
