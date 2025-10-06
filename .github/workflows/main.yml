@@ -35,7 +35,7 @@ jobs:
       - name: Run and upload Snyk SAST test
         continue-on-error: true
         run: |
-          snyk code test --json-file-output=snyk-sast-results.json || true
+          snyk code test --report --json-file-output=snyk-sast-results.json || true
           jq . snyk-sast-results.json > snyk-sast-results-pretty.json
           snyk code monitor || true
         env:
