@@ -57,8 +57,10 @@ jobs:
           sca_critical=$(jq '[.vulnerabilities[] | select(.severity=="critical")] | length' snyk-results.json)
 
           # Check SAST results
-          sast_high=$(jq '[.runs[].tool.driver.rules?[] | select(.properties.precision=="high")] | length' snyk-sast-results.json)
-          sast_critical=$(jq [.rules[].tool.drive.rules?[] | select(.properties.precision=="very-high")] | length' snyk-sast-results.json)
+          echo "Counting high severity vulnerabilities .........."
+          sast_high=$(jq '[.runs[].tool.driver.rules[]? | select(.properties.precision=="high")] | length' snyk-sast-results.json)
+          echo "High severity vulnerabilities count: $sast_high"
+          sast_critical=$(jq [.rules[].tool.drive.rules[]? | select(.properties.precision=="very-high")] | length' snyk-sast-results.json)
 
           echo "🔎 SCA High: $sca_high"
           echo "🔎 SCA Critical: $sca_critical"
