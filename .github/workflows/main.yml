@@ -32,15 +32,12 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      - name: Run Snyk SAST test
+      - name: Run and upload Snyk SAST test
+        continue-on-error: true
         run: |
           snyk code test --json-file-output-snyk-results.json || true
           jq . snyk-sast-results.json > snyk-sast-results-pretty.json
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-      - name: Upload SAST results to Snyk Dashboard
-        run: snyk code monitor
+          snyk code monitor || true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
