@@ -48,21 +48,21 @@ jobs:
           name: snyk-vulnerabilities
           path: |
             snyk-results-pretty.json
-            snyk-sast-results.json
+            snyk-sast-results-pretty.json
 
       - name: Fail if high/critical found
         run: |
           # Check SCA results
-          sca_high=$(jq '[.vulnerabilities[] | select(.severity=="high")] | length' snyk-results.json)
-          sca_critical=$(jq '[.vulnerabilities[] | select(.severity=="critical")] | length' snyk-results.json)
+          sca_high=$(jq '[.vulnerabilities[] | select(.severity=="high")] | length' snyk-results-pretty.json)
+          sca_critical=$(jq '[.vulnerabilities[] | select(.severity=="critical")] | length' snyk-results-pretty.json)
 
           # Check SAST results
           echo "Counting high severity vulnerabilities .........."
-          sast_high="$(jq '[.runs[].tool.driver.rules[]? | select(.properties.precision=="high")] | length' snyk-sast-results.json)"
+          sast_high="$(jq '[.runs[].tool.driver.rules[]? | select(.properties.precision=="high")] | length' snyk-sast-results-pretty.json)"
           echo "High severity vulnerabilities count: $sast_high"
 
           echo "Counting critical severity vulnerabilities .........."
-          sast_critical="$(jq '[.runs[].tool.driver.rules[]? | select(.properties.precision=="very-high")] | length' snyk-sast-results.json)"
+          sast_critical="$(jq '[.runs[].tool.driver.rules[]? | select(.properties.precision=="very-high")] | length' snyk-sast-results-pretty.json)"
           echo "Critical severity vulnerabilities count: $sast_critical"
 
           echo "🔎 SCA High: $sca_high"
