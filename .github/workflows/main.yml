@@ -37,7 +37,7 @@ jobs:
         run: |
           snyk code test --json-file-output=snyk-sast-results.json || true
           jq . snyk-sast-results.json > snyk-sast-results-pretty.json
-          snyk code monitor --all-projects --report || true
+          snyk monitor --all-projects --report  || true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
